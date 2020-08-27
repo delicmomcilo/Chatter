@@ -5,7 +5,7 @@ import { auth, provider } from "./firebase";
 import { useStateProviderValue } from "./StateProvider";
 
 function Login() {
-  const [{}, dispatch] = useStateProviderValue();
+  const [{ }, dispatch] = useStateProviderValue();
 
   const signIn = () => {
     auth
@@ -22,7 +22,8 @@ function Login() {
   return (
     <div className="login">
       <div className="login__container">
-        <Button type="submit" onClick={signIn}>
+        <h1>Chatter</h1>
+        <Button variant="contained" color="primary" type="submit" onClick={signIn}>
           Sign In With Google
         </Button>
       </div>

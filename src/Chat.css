@@ -28,7 +28,7 @@
 .chat__message {
   position: relative;
   font-size: 16px;
-  padding: 10px;
+  padding: 16px;
   background-color: #ffffff;
   border-radius: 10px;
   width: fit-content;
@@ -37,7 +37,12 @@
 
 .chat__reciever {
   margin-left: auto;
-  background-color: #dcf8c6;
+  background-color: #6C63FF;
+  color: white;
+}
+
+.chat__nameCustom{
+  color: black;
 }
 
 .chat__timestamp {
@@ -60,10 +65,9 @@
 
 .chat__body {
   flex: 1;
-  background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
-  background-repeat: repeat;
-  background-position: center;
+  background-image: url("background1.svg");
   padding: 30px;
+  background-size: 50vw;
   overflow-x: hidden;
   overflow-y: auto;
 }
