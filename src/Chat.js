@@ -42,10 +42,6 @@ function Chat() {
   }, [roomId]);
 
   useEffect(() => {
-    console.log(chosenEmoji);
-  }, [chosenEmoji]);
-
-  useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
   }, [roomId]);
 
@@ -81,8 +77,8 @@ function Chat() {
               ).toUTCString()}
             </p>
           ) : (
-            <p>Has been inactive</p>
-          )}
+              <p>Has been inactive</p>
+            )}
         </div>
 
         <div className="chat__headerRight">
@@ -105,12 +101,12 @@ function Chat() {
           <p
             className={`chat__message ${
               message.name === user.displayName && "chat__reciever"
-            }`}
+              }`}
           >
             <span
               className={`chat__name ${
                 message.name === user.displayName && "chat__nameCustom"
-              }`}
+                }`}
             >
               {message.name}
             </span>

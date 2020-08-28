@@ -7,10 +7,16 @@
   flex: 0.65 1;
   display: flex;
   flex-direction: column;
+    background-image: url("homescreen.svg");
+    padding: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20vw;
+
 }
 
 .homescreen__container {
-  padding: 100px;
+  padding: 20px;
   text-align: center;
 }
 

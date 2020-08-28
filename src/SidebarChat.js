@@ -8,6 +8,7 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import Tooltip from "@material-ui/core/Tooltip";
 
+
 const useStyles = makeStyles((theme) => ({
   fab: {
     margin: theme.spacing(2),
@@ -23,6 +24,7 @@ function SidebarChat({ id, name, addNewChat }) {
   const classes = useStyles();
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
+  const [roomName, setRoomName] = React.useState("");
 
   useEffect(() => {
     if (id) {
@@ -36,21 +38,13 @@ function SidebarChat({ id, name, addNewChat }) {
     }
   }, [id]);
 
+
+
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
   }, []);
 
-  const createChat = () => {
-    const roomName = prompt("Please enter name for chat");
-
-    if (roomName) {
-      db.collection("rooms").add({
-        name: roomName,
-      });
-    }
-  };
-
-  return !addNewChat ? (
+  return !addNewChat && (
     <Link to={`/rooms/${id}`}>
       <div className="sidebarChat">
         <Avatar src={`https://avatars.dicebear.com/api/bottts/${seed}.svg`} />
@@ -60,14 +54,6 @@ function SidebarChat({ id, name, addNewChat }) {
         </div>
       </div>
     </Link>
-  ) : (
-    <div onClick={createChat} className="sidebarAddChat">
-      <Tooltip title="Add" aria-label="add">
-        <Fab color="primary" className={classes.fab}>
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-    </div>
   );
 }
 
