@@ -1,10 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import "./SidebarChat.css";
 import db from "./firebase";
 import { Link } from "react-router-dom";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import Tooltip from "@material-ui/core/Tooltip";
+
+const useStyles = makeStyles((theme) => ({
+  fab: {
+    margin: theme.spacing(2),
+  },
+  absolute: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(3),
+  },
+}));
 
 function SidebarChat({ id, name, addNewChat }) {
+  const classes = useStyles();
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -45,8 +61,12 @@ function SidebarChat({ id, name, addNewChat }) {
       </div>
     </Link>
   ) : (
-    <div onClick={createChat} className="sidebarChat">
-      <h2>Add new Chat</h2>
+    <div onClick={createChat} className="sidebarAddChat">
+      <Tooltip title="Add" aria-label="add">
+        <Fab color="primary" className={classes.fab}>
+          <AddIcon />
+        </Fab>
+      </Tooltip>
     </div>
   );
 }

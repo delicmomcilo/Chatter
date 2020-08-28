@@ -30,12 +30,14 @@ function Sidebar() {
   useEffect(() => {
     const unsubscribe = db.collection("rooms").onSnapshot((snapshot) =>
       setRooms(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        })).filter(str => {
-          return str.data.name.includes(mySearch);
-        })
+        snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+          .filter((str) => {
+            return str.data.name.includes(mySearch);
+          })
       )
     );
 
@@ -66,10 +68,12 @@ function Sidebar() {
       <div className="sidebar_search">
         <div className="sidebar_searchContainer">
           <SearchOutlinedIcon />
-          <input value={input}
-            onChange={evt => doSearch(evt)}
+          <input
+            value={input}
+            onChange={(evt) => doSearch(evt)}
             placeholder="Search for a chat"
-            type="text" />
+            type="text"
+          />
         </div>
       </div>
       <div className="sidebar_chats">

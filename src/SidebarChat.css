@@ -14,10 +14,6 @@ a {
   color: black;
 }
 
-.sidebarChat:hover {
-  background-color: #ebebeb;
-}
-
 .sidebarChat_info > h2 {
   font-size: 16px;
   margin-bottom: 8px;

@@ -37,11 +37,11 @@
 
 .chat__reciever {
   margin-left: auto;
-  background-color: #6C63FF;
+  background-color: #6c63ff;
   color: white;
 }
 
-.chat__nameCustom{
+.chat__nameCustom {
   color: black;
 }
 
@@ -67,6 +67,8 @@
   flex: 1;
   background-image: url("background1.svg");
   padding: 30px;
+  background-position: center;
+  background-repeat: no-repeat;
   background-size: 50vw;
   overflow-x: hidden;
   overflow-y: auto;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Picker } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
 import { Avatar, IconButton } from "@material-ui/core";
 import { AttachFile, MoreVert, SearchOutlined } from "@material-ui/icons";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
@@ -12,10 +14,16 @@ import { useStateProviderValue } from "./StateProvider";
 function Chat() {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
+  const [emojiShow, setEmojiShow] = useState(false);
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
   const [{ user }] = useStateProviderValue();
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+
+  const addEmoji = (emoji) => {
+    setInput(input + emoji.native);
+  };
 
   useEffect(() => {
     if (roomId) {
@@ -34,6 +42,10 @@ function Chat() {
   }, [roomId]);
 
   useEffect(() => {
+    console.log(chosenEmoji);
+  }, [chosenEmoji]);
+
+  useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
   }, [roomId]);
 
@@ -50,22 +62,27 @@ function Chat() {
 
   return (
     <div className="chat">
+      {emojiShow && (
+        <Picker
+          style={{ position: "absolute", bottom: "130px", zIndex: "1000" }}
+          native={true}
+          onClick={addEmoji}
+        />
+      )}
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/bottts/${seed}.svg`} />
         <div className="chat__headerInfo">
           <h3>{roomName}</h3>
-          {messages[messages.length - 1] ?
+          {messages[messages.length - 1] ? (
             <p>
               last seen{" "}
               {new Date(
                 messages[messages.length - 1]?.timestamp?.toDate()
               ).toUTCString()}
             </p>
-            :
-            <p>
-              Has been inactive
-        </p>
-          }
+          ) : (
+            <p>Has been inactive</p>
+          )}
         </div>
 
         <div className="chat__headerRight">
@@ -88,11 +105,15 @@ function Chat() {
           <p
             className={`chat__message ${
               message.name === user.displayName && "chat__reciever"
-              }`}
+            }`}
           >
-            <span className={`chat__name ${
-              message.name === user.displayName && "chat__nameCustom"
-              }`}>{message.name}</span>
+            <span
+              className={`chat__name ${
+                message.name === user.displayName && "chat__nameCustom"
+              }`}
+            >
+              {message.name}
+            </span>
             {message.message}
             <span className="chat__timestamp">
               {new Date(message.timestamp?.toDate()).toUTCString()}
@@ -101,7 +122,12 @@ function Chat() {
         ))}
       </div>
       <div className="chat__footer">
-        <InsertEmoticonIcon />
+        <IconButton
+          aria-label="delete"
+          onClick={() => setEmojiShow(!emojiShow)}
+        >
+          <InsertEmoticonIcon />
+        </IconButton>
         <form onSubmit={sendMessage}>
           <input
             value={input}
