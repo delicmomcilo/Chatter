@@ -6,8 +6,8 @@ import db from "./firebase";
 import { Link } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import { useStateProviderValue } from "./StateProvider";
 import Tooltip from "@material-ui/core/Tooltip";
-
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -20,11 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SidebarChat({ id, name, addNewChat }) {
+function SidebarChat({ id, name, addNewChat, avatarImg }) {
   const classes = useStyles();
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
   const [roomName, setRoomName] = React.useState("");
+  const [{ user }, dispatch] = useStateProviderValue();
 
   useEffect(() => {
     if (id) {
@@ -35,25 +36,31 @@ function SidebarChat({ id, name, addNewChat }) {
         .onSnapshot((snapshot) =>
           setMessages(snapshot.docs.map((doc) => doc.data()))
         );
+      if (avatarImg !== undefined) {
+        dispatch({
+          type: "SET_AVATAR",
+          avatarImg: avatarImg,
+        });
+      }
     }
   }, [id]);
-
-
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
   }, []);
 
-  return !addNewChat && (
-    <Link to={`/rooms/${id}`}>
-      <div className="sidebarChat">
-        <Avatar src={`https://avatars.dicebear.com/api/bottts/${seed}.svg`} />
-        <div className="sidebarChat_info">
-          <h2>{name}</h2>
-          <p>{messages[0]?.message}</p>
+  return (
+    !addNewChat && (
+      <Link to={`/rooms/${id}`}>
+        <div className="sidebarChat">
+          <Avatar src={`${avatarImg}`} />
+          <div className="sidebarChat_info">
+            <h2>{name}</h2>
+            <p>{messages[0]?.message}</p>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    )
   );
 }
 

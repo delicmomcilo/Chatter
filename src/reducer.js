@@ -1,5 +1,6 @@
 export const initialState = {
   user: null,
+  avatarImg: "",
 };
 
 const reducer = (state, action) => {
@@ -12,6 +13,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+
+    case "SET_AVATAR":
+      return {
+        ...state,
+        avatarImg: action.avatarImg,
       };
 
     default:

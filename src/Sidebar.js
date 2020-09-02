@@ -6,8 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 import SidebarChat from "./SidebarChat.js";
-import Tooltip from '@material-ui/core/Tooltip';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Tooltip from "@material-ui/core/Tooltip";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -62,16 +62,19 @@ function Sidebar() {
     }, 500);
   }
 
-
   function logout() {
-    firebase.auth().signOut().then(function () {
-      dispatch({
-        type: "SET_USER",
-        user: null,
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        dispatch({
+          type: "SET_USER",
+          user: null,
+        });
+      })
+      .catch(function (error) {
+        // An error happened.
       });
-    }).catch(function (error) {
-      // An error happened.
-    });
   }
 
   const createChat = () => {
@@ -92,7 +95,7 @@ function Sidebar() {
             data: doc.data(),
           }))
           .filter((str) => {
-            return str.data.name.includes(mySearch);
+            return str.data.name.toLowerCase().includes(mySearch.toLowerCase());
           })
       )
     );
@@ -139,7 +142,7 @@ function Sidebar() {
           <IconButton>
             <ChatIcon />
           </IconButton>
-          <Tooltip title="Logout" aria-label="Logout" >
+          <Tooltip title="Logout" aria-label="Logout">
             <IconButton onClick={logout}>
               <ExitToAppIcon />
             </IconButton>
@@ -157,7 +160,11 @@ function Sidebar() {
           />
         </div>
         <div onClick={handleClickOpen} className="sidebarAddChat">
-          <Tooltip title="Add" aria-label="add" style={{ width: "40px", height: "40px" }}>
+          <Tooltip
+            title="Add"
+            aria-label="add"
+            style={{ width: "40px", height: "40px" }}
+          >
             <Fab color="primary" className={classes.fab}>
               <AddIcon />
             </Fab>
@@ -167,7 +174,12 @@ function Sidebar() {
       <div className="sidebar_chats">
         <SidebarChat addNewChat />
         {rooms.map((room) => (
-          <SidebarChat key={room.id} id={room.id} name={room.data.name} />
+          <SidebarChat
+            key={room.id}
+            id={room.id}
+            name={room.data.name}
+            avatarImg={room.data.avatarImg}
+          />
         ))}
       </div>
     </div>
