@@ -5,7 +5,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 import { makeStyles } from "@material-ui/core/styles";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
-import SidebarChat from "./SidebarChat.js";
+import SidebarChat from "./SidebarChat/SidebarChat.js";
 import Tooltip from "@material-ui/core/Tooltip";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Button from "@material-ui/core/Button";
@@ -15,12 +15,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import db from "./firebase";
+import db from "../firebase";
 import firebase from "firebase";
 import "./Sidebar.css";
-import { useStateProviderValue } from "./StateProvider";
+import { useStateProviderValue } from "../StateProvider";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+
+const defaultAvatar = 'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairTheCaesar&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light';
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -81,6 +83,13 @@ function Sidebar() {
     if (roomName) {
       db.collection("rooms").add({
         name: roomName,
+        avatarUrl: defaultAvatar,
+        avatarImg: {
+          hair: "ShortHairTheCaesar",
+          skin: "Light",
+          facialHair: "Blank",
+          clothes: "BlazerShirt"
+        }
       });
     }
     handleClose();
@@ -134,12 +143,14 @@ function Sidebar() {
       </Dialog>
       <div className="sidebar_header">
         <Avatar src={user?.photoURL} />
+        <div className="chat__headerInfo">
+          <h3>Welcome to Chatter</h3>
+          <p>
+            {user?.displayName}
+          </p>
+        </div>
         <div className="sidebar_headerRight">
-          <IconButton>
-            <DonutLargeIcon />
-          </IconButton>
-
-          <IconButton>
+          <IconButton onClick={handleClickOpen}>
             <ChatIcon />
           </IconButton>
           <Tooltip title="Logout" aria-label="Logout">
@@ -159,7 +170,7 @@ function Sidebar() {
             type="text"
           />
         </div>
-        <div onClick={handleClickOpen} className="sidebarAddChat">
+        {/*         <div onClick={handleClickOpen} className="sidebarAddChat">
           <Tooltip
             title="Add"
             aria-label="add"
@@ -169,7 +180,7 @@ function Sidebar() {
               <AddIcon />
             </Fab>
           </Tooltip>
-        </div>
+        </div> */}
       </div>
       <div className="sidebar_chats">
         <SidebarChat addNewChat />

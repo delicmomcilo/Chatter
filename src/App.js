@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import Sidebar from "./Sidebar";
-import Chat from "./Chat";
-import Login from "./Login";
+import Sidebar from "./Sidebar/Sidebar";
+import Chat from "./Chat/Chat";
+import Login from "./Login/Login";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useStateProviderValue } from "./StateProvider";
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./HomeScreen/HomeScreen";
 import { auth, provider } from "./firebase";
 
 function App() {
@@ -27,20 +27,20 @@ function App() {
       {!user ? (
         <Login />
       ) : (
-        <div className="appBody">
-          <Router>
-            <Sidebar />
-            <Switch>
-              <Route path="/rooms/:roomId">
-                <Chat />
-              </Route>
-              <Route path="/">
-                <HomeScreen />
-              </Route>
-            </Switch>
-          </Router>
-        </div>
-      )}
+          <div className="appBody">
+            <Router>
+              <Sidebar />
+              <Switch>
+                <Route path="/rooms/:roomId">
+                  <Chat />
+                </Route>
+                <Route path="/">
+                  <HomeScreen />
+                </Route>
+              </Switch>
+            </Router>
+          </div>
+        )}
     </div>
   );
 }

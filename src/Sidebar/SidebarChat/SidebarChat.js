@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "./SidebarChat.css";
-import db from "./firebase";
+import db from "../../firebase";
 import { Link } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import { useStateProviderValue } from "./StateProvider";
+import { useStateProviderValue } from "../../StateProvider";
 import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,11 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SidebarChat({ id, name, addNewChat, avatarImg }) {
+function SidebarChat({ id, name, addNewChat }) {
   const classes = useStyles();
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
   const [roomName, setRoomName] = React.useState("");
+  const [avatarUrl, setAvatarUrl] = React.useState("");
   const [{ user }, dispatch] = useStateProviderValue();
 
   useEffect(() => {
@@ -36,24 +37,23 @@ function SidebarChat({ id, name, addNewChat, avatarImg }) {
         .onSnapshot((snapshot) =>
           setMessages(snapshot.docs.map((doc) => doc.data()))
         );
-      if (avatarImg !== undefined) {
-        dispatch({
-          type: "SET_AVATAR",
-          avatarImg: avatarImg,
+
+      db.collection("rooms")
+        .doc(id)
+        .onSnapshot((snapshot) => {
+          setAvatarUrl(snapshot.data().avatarUrl);
         });
-      }
+
     }
   }, [id]);
 
-  useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000));
-  }, []);
 
+  console.log(avatarUrl)
   return (
     !addNewChat && (
       <Link to={`/rooms/${id}`}>
         <div className="sidebarChat">
-          <Avatar src={`${avatarImg}`} />
+          <Avatar src={`${avatarUrl}`} />
           <div className="sidebarChat_info">
             <h2>{name}</h2>
             <p>{messages[0]?.message}</p>

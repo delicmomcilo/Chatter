@@ -9,16 +9,18 @@ import MicIcon from "@material-ui/icons/Mic";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import AddIcon from "@material-ui/icons/Add";
 import "./Chat.css";
+import AvatarModal from "../AvatarModal/AvatarModal"
 import { useParams } from "react-router-dom";
-import db from "./firebase";
+import db from "../firebase";
 import firebase from "firebase";
-import { useStateProviderValue } from "./StateProvider";
-import { storage } from "./firebase";
+import { useStateProviderValue } from "../StateProvider";
+import { storage } from "../firebase";
 import { css } from "glamor";
 import ScrollToBottom from "react-scroll-to-bottom";
 
 function Chat() {
   var reader = new FileReader();
+  const [open, setOpen] = useState(false);
   const [avatarImg, setAvatarImg] = useState("");
   const [image, setImage] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -29,7 +31,7 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
-  const [{ user }] = useStateProviderValue();
+  const [{ user, avatarUrl }, dispatch] = useStateProviderValue();
 
   const ROOT_CSS = css({
     height: "100%",
@@ -45,12 +47,24 @@ function Chat() {
     setImageUrl("");
   };
 
+  const handleCloseAvatar = () => {
+    setOpen(false);
+  };
+
+  const handleOpenAvatar = () => {
+    setOpen(true);
+  };
+
   useEffect(() => {
     if (roomId) {
       db.collection("rooms")
         .doc(roomId)
         .onSnapshot((snapshot) => {
           setRoomName(snapshot.data().name);
+          dispatch({
+            type: "SET_AVATAR",
+            avatarUrl: snapshot.data().avatarUrl,
+          });
           setAvatarImg(snapshot.data().avatarImg);
         });
       /*       db.collection("rooms")
@@ -110,6 +124,7 @@ function Chat() {
             .then((url) => {
               db.collection("rooms").doc(roomId).collection("messages").add({
                 img: url,
+                googleImg: user.photoURL,
                 name: user.displayName,
                 message: input,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -131,6 +146,7 @@ function Chat() {
     setImageUrl("");
     setEmojiShow(false);
   };
+
 
   const chooseImage = (event) => {
     let reader = new FileReader();
@@ -155,27 +171,29 @@ function Chat() {
           onClick={addEmoji}
         />
       )}
+      <AvatarModal openAvatar={open} handleCloseAvatar={handleCloseAvatar} avatarImg={avatarImg} />
       <div className="chat__header">
         <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-          <Avatar src={avatarImg} />
-          {/*           <IconButton
-            style={{ position: "absolute" }}}
+          <Avatar src={avatarUrl} />
+          <IconButton
+            onClick={handleOpenAvatar}
+            style={{ position: "absolute", marginLeft: "-10px", marginTop: "-5px" }}
           >
             <AddIcon style={{ position: "absolute" }} />
-          </IconButton> */}
+          </IconButton>
         </div>
         <div className="chat__headerInfo">
           <h3>{roomName}</h3>
           {messages[messages.length - 1] ? (
             <p>
-              last seen{" "}
+              Last seen{" "}
               {new Date(
                 messages[messages.length - 1]?.timestamp?.toDate()
               ).toUTCString()}
             </p>
           ) : (
-            <p>Has been inactive</p>
-          )}
+              <p>Has been inactive</p>
+            )}
         </div>
 
         <div className="chat__headerRight">
@@ -204,21 +222,28 @@ function Chat() {
                 <p
                   className={`chat__message ${
                     message.name === user.displayName && "chat__reciever"
-                  }`}
+                    }`}
                 >
                   <span
                     className={`chat__name ${
                       message.name === user.displayName && "chat__nameCustom"
-                    }`}
+                      }`}
                   >
                     {message.name}
                   </span>
-                  {message.message}
+                  <span style={{ display: "block" }}>{message.message}</span>
+
                   {message.img && (
                     <div>
                       <img style={{ maxWidth: "800px" }} src={message.img} />
                     </div>
                   )}
+                  <Avatar src={message.googleImg}
+                    className={`${
+                      message.name === user.displayName ? "chatRecieverImage" : "chatAvatarImage"
+                      }`}
+                   /*  className="chatAvatarImage" style={{ float: "right" }} */
+                   /* style={{float: "right"padding-left: 5px;padding-top: 5px;border-radius: 20px;"}} */ />
                   <span className="chat__timestamp">
                     {new Date(message.timestamp?.toDate()).toUTCString()}
                   </span>
@@ -260,7 +285,7 @@ function Chat() {
           </IconButton>
         )}
       </div>
-    </div>
+    </div >
   );
 }
 

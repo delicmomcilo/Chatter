@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import "./Login.css";
-import { auth, provider } from "./firebase";
-import { useStateProviderValue } from "./StateProvider";
+import { auth, provider } from "../firebase";
+import { useStateProviderValue } from "../StateProvider";
 
 function Login() {
   const [{ }, dispatch] = useStateProviderValue();
